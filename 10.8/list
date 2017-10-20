@@ -1,0 +1,13 @@
+主要内容：
+1. ubuntu 使用入门 & shell的使用；
+2. git使用入门；
+3. 简单数据结构介绍，Queue & Deque;
+4. 使用单向队列求解约瑟夫环的问题；
+5. 使用双向队列求解回文串检查；
+    作业：
+1. try.github.io 熟悉git基本操作；
+2. 熟悉ubuntu 下基本shell命令；
+3. 上传两次练习和作业到bitbucket；
+4. 求解最长回文子串；
+
+abcba
