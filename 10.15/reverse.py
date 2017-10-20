@@ -1,8 +1,4 @@
-#from ListNode import ListNode
-class ListNode:
-    def __init__(self, item):
-        self.data = item
-        self.next = None
+from ListNode import ListNode
 
 
 def reverse(head):
