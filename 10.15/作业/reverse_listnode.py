@@ -40,12 +40,13 @@ def reverse_listnode(head, number):
 
     return result.next
 
+
 nodelist1 = ListNode(1)
 nodelist1.next = ListNode(2)
 nodelist1.next.next = ListNode(3)
 nodelist1.next.next.next = ListNode(4)
 
-head = reverse_listnode(nodelist1, 2)
+head = reverse_listnode(head=nodelist1, number=2)
 
 while head is not None:
     print(head.data)
