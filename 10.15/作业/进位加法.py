@@ -3,12 +3,13 @@ class ListNode:
         self.data = item
         self.next = None
 
+
 def listnode_add(listnode1, listnode2):
     temp = ListNode(0)
     result = temp
     excess = False
 
-    while listnode1 != None and listnode2 != None:
+    while listnode1 is not None and listnode2 is not None:
         sum_node = listnode1.data + listnode2.data
         if excess:
             sum_node += 1
@@ -23,6 +24,7 @@ def listnode_add(listnode1, listnode2):
         temp = temp.next
 
     return result.next
+
 
 node1 = ListNode(1)
 node1.next = ListNode(2)
