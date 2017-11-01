@@ -30,14 +30,14 @@ def sort_ln(head):
     while h is not None:
         if int(h.data) % 2 == 0:
             even.append(h.data)
-            print(even)
+            print('even', even)
         else:
             odd.append(h.data)
-            print(odd)
-
+            print('odd', odd)
         h = h.next
-        odd.extend(even)
-        return build_list(odd)
+
+    odd.extend(even)
+    return build_list(odd)
 
 
 l1 = build_list([1, 2, 2, 2, 3, 3, 4, 5, 5, 6])
