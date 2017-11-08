@@ -51,4 +51,45 @@ def combination(total, length):
     return output
 
 
-print(combination(4, 2))
+def ncr(a, b):
+    def myfact(n):
+        assert n >= 0, "Factorial not defined for negative values."
+        if n < 2:
+            return 1
+        else:
+            return n * myfact(n - 1)
+
+    up = myfact(a)
+    down = myfact(b) * myfact(a-b)
+    return up // down
+
+
+def combination_new(n, r):
+    import random
+    outcome = []
+    current_location = 0
+
+    while len(outcome) <= ncr(n, r):
+        sublist = []
+        while current_location < r:
+            while True:
+                ren_number = random.randrange(1, n+1)
+                if ren_number not in sublist:
+                    break
+            sublist.append(ren_number)
+            current_location += 1
+            print(sublist)
+
+        sublist.sort()
+
+        #  Check is the list has already existed.
+        if sublist in outcome:
+            continue
+        else:
+            outcome.append(sublist)
+
+    outcome.sort()
+    return outcome
+
+
+print(combination_new(4, 2))
