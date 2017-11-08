@@ -68,8 +68,9 @@ def combination_new(n, r):
     import random
     outcome = []
     current_location = 0
+    all_round = ncr(n, r)
 
-    while len(outcome) <= ncr(n, r):
+    while len(outcome) < all_round:
         sublist = []
         while current_location < r:
             while True:
@@ -78,10 +79,9 @@ def combination_new(n, r):
                     break
             sublist.append(ren_number)
             current_location += 1
-            print(sublist)
 
         sublist.sort()
-
+        current_location = 0
         #  Check is the list has already existed.
         if sublist in outcome:
             continue
@@ -92,4 +92,4 @@ def combination_new(n, r):
     return outcome
 
 
-print(combination_new(4, 2))
+print(combination_new(10, 4))
