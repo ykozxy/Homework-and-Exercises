@@ -28,7 +28,7 @@ def combination(total, length):
                 current_position += 1
                 print(sub_output)
 
-                #  check whether the length of sub-list == the length input at the beginning
+                #  check whether the length of sublist == the length input at the beginning
                 jump_out = False
                 if len(sub_output) == length:
                     jump_out = True
@@ -92,4 +92,29 @@ def combination_new(n, r):
     return outcome
 
 
-print(combination_new(10, 4))
+def combination_rec(n, r):
+    if n == r:
+        sub_list = []
+        for i in range(1, r+1):
+            sub_list.append(i)
+        return [sub_list]
+
+    elif r == 1:
+        sub_list = []
+        for i in range(1, n+1):
+            sub_list.append([i])
+        return sub_list
+
+    else:
+        sub_list = combination_rec(n-1, r)
+        ad = combination_rec(n-1, r-1)
+        for each in ad:
+            each.append(n)
+        return sub_list + ad
+
+
+print(combination_rec(5, 3))
+
+'''(3,2)  [1,2] [1,3] [2,3]
+(3,1) [[1,4],[2,4],[3,4]]
+c(n,k ) = c(n-1, k) + c(n-1, k-1 ).append(n)'''

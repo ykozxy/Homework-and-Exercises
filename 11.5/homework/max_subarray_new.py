@@ -1,21 +1,26 @@
-# [-2, 1, -3, 4, -1, 2, 1, -5, 4]
-def add_lst(lst):
-    sum1 = 0
-    for num in lst:
-        sum1 += num
-    return sum1
+def max_subarray(lst):
+    if lst == []:
+        return None
+    currmax, summax = lst[0], lst[0]
 
+    for c in lst[1:]:
+        currmax = max(c, currmax + c)
+        summax = max(currmax, summax)
 
-def max_sub_array(lst):
-    maxnum = lst[0]
-    for long in range(0, len(lst)):
-        for position in range(0, len(lst)-long):
-            sumnum = add_lst(lst[position: position + long])
-            if sumnum > maxnum:
-                maxnum = sumnum
-    return maxnum
+    return summax
 
+print(max_subarray([-2, 1, -3, 4, -1, 2, 1, -5, 4]))
 
-print(max_sub_array([-2, 1, -3, 4, -1, 2, 1, -5, 4]))
+'''
+O(n)
+O(lgN)
+O(n**2)
+O(2**n)
 
-# 优化到O(n)
+log2 记为 lg 
+
+lg8 = 3
+lg1024 = 10
+
+#1  ([2, 5, 7, 11, 21, 24] , 13)  return : [2, 11]  O(n) ; 
+'''
