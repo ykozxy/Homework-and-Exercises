@@ -4,7 +4,6 @@ def sort_lst(lst1, lst2):
     if type(lst2) is int:
         lst2 = [lst2]
 
-
     len1 = len(lst1)
     len2 = len(lst2)
     if len1 > len2:
@@ -35,11 +34,13 @@ def merge_sort(lst):
 
     cur_length = 2
     while (2 * cur_length) <= length:
+        length_mod = length % 2
+        length -= length_mod
         for k in range(0, length, 2):
             clst1 = lst[k]
             clst2 = lst[k+1]
-            split_list.pop(k)
-            split_list[k] = sort_lst(clst1, clst2)
+            split_list.pop(k//2)
+            split_list[k//2] = sort_lst(clst1, clst2)
 
         if length_mod:
             split_list[-1] = sort_lst(split_list[-1], split_list[-2])
