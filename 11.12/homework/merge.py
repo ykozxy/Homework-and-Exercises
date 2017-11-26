@@ -20,7 +20,28 @@ def sort_lst(lst1, lst2):
     return lst2
 
 
-def merge_sort(lst):
+def sort_list(lst1, lst2):
+    if type(lst1) is int:
+        lst1 = [lst1]
+    if type(lst2) is int:
+        lst2 = [lst2]
+
+    final_lst = []
+
+    while len(lst1) > 0 and len(lst2) > 0:
+        if lst1[0] >= lst2[0]:
+            final_lst.append(lst2.pop(0))
+        else:
+            final_lst.append(lst1.pop(0))
+    if len(lst1) != 0:
+        final_lst += lst1
+    elif len(lst2) != 0:
+        final_lst += lst2
+
+    return final_lst
+
+
+def merge_sort_0(lst):
     length = len(lst)
     split_list = []
 
@@ -34,16 +55,18 @@ def merge_sort(lst):
 
     cur_length = 2
     while (2 * cur_length) <= length:
+        length = len(lst)
         length_mod = length % 2
         length -= length_mod
         for k in range(0, length, 2):
+            print(k, len(lst))
             clst1 = lst[k]
             clst2 = lst[k+1]
             split_list.pop(k//2)
-            split_list[k//2] = sort_lst(clst1, clst2)
+            split_list[k//2] = sort_list(clst1, clst2)
 
         if length_mod:
-            split_list[-1] = sort_lst(split_list[-1], split_list[-2])
+            split_list[-1] = sort_list(split_list[-1], split_list[-2])
             split_list.pop(-2)
 
         cur_length += 1
@@ -51,5 +74,19 @@ def merge_sort(lst):
 
     return split_list
 
+def merge_sort(lst):
+    if len(lst) > 1:
+        mid = len(lst)//2
+        left = lst[:mid]
+        right = lst[mid:]
 
-print(merge_sort([1, 3, 2, 4, 3, 5]))
+        l = merge_sort(left)
+        r = merge_sort(right)
+        return sort_list(l, r)
+    else:
+        return lst
+
+lst = [1, 3, 2, 4, 3, 5, 4]
+
+print(merge_sort_0(lst))
+# print(sort_list([1, 2, 5, 8], [0, 1, 2, 3, 4]))
