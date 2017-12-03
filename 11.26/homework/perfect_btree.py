@@ -16,7 +16,7 @@ def is_binary_tree(head):
     elif head.leftChild is not None and head.rightChild is not None:
         lft = head.leftChild
         right = head.rightChild
-        if lft and right:
+        if is_binary_tree(lft) and is_binary_tree(right):
             return True
         else:
             return False
