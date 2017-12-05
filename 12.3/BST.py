@@ -13,13 +13,22 @@ class TreeNode:
         return self.rightChild
 
     def is_leaf(self):
-        return not(self.leftChild or self.rightChild)
+        return not (self.leftChild or self.rightChild)
 
     def is_root(self):
         return not self.parent
 
     def has_both_children(self):
         return self.leftChild and self.rightChild
+
+    def set_child_of_parent(self):
+        if self.parent is None:
+            raise AttributeError("Parent do not exist")
+        elif self.value < self.parent.value:
+            self.parent.leftChild = self
+        else:
+            self.parent.rightChild = self
+
 
 class BST:
     def __init__(self):
@@ -34,18 +43,18 @@ class BST:
         self.size += 1
 
     def _put(self, key, value, currentNode):
-        '''
+        """
         :type currentNode: TreeNode
         :param key:
         :param value:
         :param currentNode:
         :return:
-        '''
+        """
         if key < currentNode.key:
             if currentNode.has_left_child():
                 self._put(key, value, currentNode.leftChild)
             else:
-                currentNode.leftChile = TreeNode(key, value, parrent=currentNode)
+                currentNode.leftChile = TreeNode(key=key, val=value, parent=currentNode)
         else:
             if currentNode.has_right_child():
                 self._put(key, value, currentNode.rightChild)
@@ -83,29 +92,64 @@ class BST:
                 self.remove(node_to_remove)
                 self.size -= 1
             else:
-                 raise KeyError('Error, key not in tree')
+                raise KeyError('Error, key not in tree')
         elif self.size == 1 and self.root.key == key:
             self.root = None
             self.size -= 1
         else:
             raise KeyError('Error, key not in tree')
 
-
     def remove(self, currentNode):
+        """
+        :type smallest_node: TreeNode
+        :type currentNode: TreeNode
+        :param currentNode:
+        :return:
+        """
         if currentNode.is_leaf():
             if currentNode == currentNode.parent.leftChild():
                 currentNode.parent.leftChild = None
             else:
                 currentNode.parent.rightChild = None
         elif currentNode.has_both_children():
+            smallest_node = self.find_min(currentNode)
+            assert smallest_node is TreeNode
+            currentNode.key = smallest_node.key
+            currentNode.value = smallest_node.value
 
+            if smallest_node.rightChild.key < smallest_node.parent.key:
+                smallest_node.parent.leftChild = smallest_node.rightChild
+            else:
+                smallest_node.parent.rightChild = smallest_node.rightChild
 
         else:
+            if currentNode.rightChild is not None:
+                currentNode.key = currentNode.rightChild.key
+                currentNode.value = currentNode.rightChild.value
+                if currentNode.rightChild.has_right_child():
+                    currentNode.rightChild = currentNode.rightChild.rightChild
+                if currentNode.rightChild.has_left_child():
+                    currentNode.leftChild = currentNode.rightChild.leftChild
 
+            elif currentNode.leftChild is not None:
+                currentNode.key = currentNode.leftChild.key
+                currentNode.value = currentNode.leftChild.value
+                if currentNode.leftChild.has_right_child():
+                    currentNode.rightChild = currentNode.leftChild.rightChild
+                if currentNode.leftChild.has_left_child():
+                    currentNode.leftChild = currentNode.leftChild.leftChild
 
-
-    def find_min(self):
-
+    def find_min(self, currentNode):
+        """
+        :type currentNode: TreeNode
+        :param currentNode:
+        :return:
+        """
+        currentNode = currentNode.rightChild
+        while currentNode.leftChild is not None:
+            currentNode.leftChild.parent = currentNode
+            currentNode = currentNode.leftChild
+        return currentNode
 
 
 a = BST()
