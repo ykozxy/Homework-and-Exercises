@@ -42,24 +42,24 @@ class BST:
             self.root = TreeNode(key, value)
         self.size += 1
 
-    def _put(self, key, value, currentNode):
+    def _put(self, key, value, current_node):
         """
-        :type currentNode: TreeNode
+        :type current_node: TreeNode
         :param key:
         :param value:
-        :param currentNode:
+        :param current_node:
         :return:
         """
-        if key < currentNode.key:
-            if currentNode.has_left_child():
-                self._put(key, value, currentNode.leftChild)
+        if key < current_node.key:
+            if current_node.has_left_child():
+                self._put(key, value, current_node.leftChild)
             else:
-                currentNode.leftChile = TreeNode(key=key, val=value, parent=currentNode)
+                current_node.leftChile = TreeNode(key=key, val=value, parent=current_node)
         else:
-            if currentNode.has_right_child():
-                self._put(key, value, currentNode.rightChild)
+            if current_node.has_right_child():
+                self._put(key, value, current_node.rightChild)
             else:
-                currentNode.rightChild = TreeNode(key, value, parent=currentNode)
+                current_node.rightChild = TreeNode(key, value, parent=current_node)
 
     def __setitem__(self, k, v):
         self.put(k, v)
@@ -72,15 +72,15 @@ class BST:
         else:
             return None
 
-    def _get(self, key, currentNode):
-        if not currentNode:
+    def _get(self, key, current_node):
+        if not current_node:
             return None
-        elif currentNode.key == key:
-            return currentNode
-        elif key < currentNode.key:
-            return self._get(key, currentNode.leftChild)
+        elif current_node.key == key:
+            return current_node
+        elif key < current_node.key:
+            return self._get(key, current_node.leftChild)
         else:
-            return self._get(key, currentNode.rightChild)
+            return self._get(key, current_node.rightChild)
 
     def __getitem__(self, key):
         return self.get(key)
@@ -99,22 +99,22 @@ class BST:
         else:
             raise KeyError('Error, key not in tree')
 
-    def _remove(self, currentNode):
+    def _remove(self, current_node):
         """
-        :type currentNode: TreeNode
-        :param currentNode:
+        :type current_node: TreeNode
+        :param current_node:
         :return:
         """
-        if currentNode.is_leaf():
-            if currentNode == currentNode.parent.leftChild():
-                currentNode.parent.leftChild = None
+        if current_node.is_leaf():
+            if current_node == current_node.parent.leftChild():
+                current_node.parent.leftChild = None
             else:
-                currentNode.parent.rightChild = None
-        elif currentNode.has_both_children():
-            smallest_node = self._find_min(currentNode)
+                current_node.parent.rightChild = None
+        elif current_node.has_both_children():
+            smallest_node = self._find_min(current_node)
             assert smallest_node is TreeNode
-            currentNode.key = smallest_node.key
-            currentNode.value = smallest_node.value
+            current_node.key = smallest_node.key
+            current_node.value = smallest_node.value
 
             if smallest_node.rightChild.key < smallest_node.parent.key:
                 smallest_node.parent.leftChild = smallest_node.rightChild
@@ -122,33 +122,34 @@ class BST:
                 smallest_node.parent.rightChild = smallest_node.rightChild
 
         else:
-            if currentNode.rightChild is not None:
-                currentNode.key = currentNode.rightChild.key
-                currentNode.value = currentNode.rightChild.value
-                if currentNode.rightChild.has_right_child():
-                    currentNode.rightChild = currentNode.rightChild.rightChild
-                if currentNode.rightChild.has_left_child():
-                    currentNode.leftChild = currentNode.rightChild.leftChild
+            if current_node.rightChild is not None:
+                current_node.key = current_node.rightChild.key
+                current_node.value = current_node.rightChild.value
+                if current_node.rightChild.has_right_child():
+                    current_node.rightChild = current_node.rightChild.rightChild
+                if current_node.rightChild.has_left_child():
+                    current_node.leftChild = current_node.rightChild.leftChild
 
-            elif currentNode.leftChild is not None:
-                currentNode.key = currentNode.leftChild.key
-                currentNode.value = currentNode.leftChild.value
-                if currentNode.leftChild.has_right_child():
-                    currentNode.rightChild = currentNode.leftChild.rightChild
-                if currentNode.leftChild.has_left_child():
-                    currentNode.leftChild = currentNode.leftChild.leftChild
+            elif current_node.leftChild is not None:
+                current_node.key = current_node.leftChild.key
+                current_node.value = current_node.leftChild.value
+                if current_node.leftChild.has_right_child():
+                    current_node.rightChild = current_node.leftChild.rightChild
+                if current_node.leftChild.has_left_child():
+                    current_node.leftChild = current_node.leftChild.leftChild
 
-    def _find_min(self, currentNode):
+    @staticmethod
+    def _find_min(current_node):
         """
-        :type currentNode: TreeNode
-        :param currentNode:
+        :type current_node: TreeNode
+        :param current_node:
         :return:
         """
-        currentNode = currentNode.rightChild
-        while currentNode.leftChild is not None:
-            currentNode.leftChild.parent = currentNode
-            currentNode = currentNode.leftChild
-        return currentNode
+        current_node = current_node.rightChild
+        while current_node.leftChild is not None:
+            current_node.leftChild.parent = current_node
+            current_node = current_node.leftChild
+        return current_node
 
 
 a = BST()
