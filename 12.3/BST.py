@@ -89,7 +89,7 @@ class BST:
         if self.size > 1:
             node_to_remove = self._get(key, self.root)
             if node_to_remove:
-                self.remove(node_to_remove)
+                self._remove(node_to_remove)
                 self.size -= 1
             else:
                 raise KeyError('Error, key not in tree')
@@ -99,9 +99,8 @@ class BST:
         else:
             raise KeyError('Error, key not in tree')
 
-    def remove(self, currentNode):
+    def _remove(self, currentNode):
         """
-        :type smallest_node: TreeNode
         :type currentNode: TreeNode
         :param currentNode:
         :return:
@@ -112,7 +111,7 @@ class BST:
             else:
                 currentNode.parent.rightChild = None
         elif currentNode.has_both_children():
-            smallest_node = self.find_min(currentNode)
+            smallest_node = self._find_min(currentNode)
             assert smallest_node is TreeNode
             currentNode.key = smallest_node.key
             currentNode.value = smallest_node.value
@@ -139,7 +138,7 @@ class BST:
                 if currentNode.leftChild.has_left_child():
                     currentNode.leftChild = currentNode.leftChild.leftChild
 
-    def find_min(self, currentNode):
+    def _find_min(self, currentNode):
         """
         :type currentNode: TreeNode
         :param currentNode:
