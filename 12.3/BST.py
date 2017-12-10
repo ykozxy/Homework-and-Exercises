@@ -152,11 +152,24 @@ class BST:
         return current_node
 
 
+def pre_order(tree):
+    """
+
+    :type tree: TreeNode
+    """
+    if tree is not None:
+        print(tree.key)
+        pre_order(tree.leftChild)
+        pre_order(tree.rightChild)
+
+
 a = BST()
-# a[3] = 'hi'
-# a[6] = 'hoho'
+
 
 for i in range(100):
     a[i] = i
 
-print(a[76])
+print(a[3])
+a.delete(3)
+print(a[3])
+pre_order(a.root)

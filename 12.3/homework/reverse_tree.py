@@ -17,11 +17,11 @@ class TreeNode:
 
 
 def reverse_tree(node):
-    '''
+    """
     :type node:TreeNode
     :param node:
     :return:
-    '''
+    """
     if node.has_left_child() and node.has_right_child():
         node.leftChild, node.rightChild = node.rightChild, node.leftChild
         reverse_tree(node.leftChild)
@@ -34,17 +34,6 @@ def reverse_tree(node):
         reverse_tree(node.leftChild)
     else:
         pass
-
-
-def pre_order(tree):
-    """
-
-    :type tree: TreeNode
-    """
-    if tree is not None:
-        print(tree.key)
-        pre_order(tree.leftChild)
-        pre_order(tree.rightChild)
 
 
 a = TreeNode(1, 1)

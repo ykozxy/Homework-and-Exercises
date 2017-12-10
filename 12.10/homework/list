@@ -1,0 +1,12 @@
+主要内容：
+1. 打印前n个整数能构造的独立的二叉查找树
+2. AVL 平衡二叉树基本原理讲解；
+3. 判断一棵树是否为AVL树；
+4. 实现AVL树中的insert 和 balance方法以及_ll_case;
+5. 比较sorted_list, hash_table，bst, AVL tree的put get in del时间复杂度；
+
+    作业：
+1. 实现AVL树中的 lr rr rl case；
+2. 调研python中的map实现方法；
+3. 一颗AVL BST中 两个值 存储反了，找到他们并交换；
+4. 将AVL树，转换成一个有序链表； input: 2<-5->3 output: 2->3->5
