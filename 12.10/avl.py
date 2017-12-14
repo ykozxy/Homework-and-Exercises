@@ -80,7 +80,14 @@ class Node:
         pass
 
     def _rr_case(self):
-        pass
+        child = self.right
+        if self.parent.is_root or self.value > self.parent.value:
+            self.parent.right = child
+        else:
+            self.parent.left = child
+
+        child.parent, self.parent = self.parent, child
+        child.left, self.right = self, child.left
 
 
 values = [5, 3, 2]
