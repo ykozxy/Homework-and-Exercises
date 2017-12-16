@@ -74,10 +74,23 @@ class Node:
         child.right, self.left = self, child.right
 
     def _lr_case(self):
-        pass
+        child = self.left
+        self.left = child.right
+        child.right.parent = self
+        child.right = self.left.left
+        self.left.left = child
+        child.parent = self.left
+        self._ll_case()
 
     def _rl_case(self):
-        pass
+        child = self.right
+        self.right = child.left
+        self.right.parent = self
+        child.left = self.right.right
+        self.right.parent = child
+        self.right.right = child
+        child.parent = self.right
+        self._rr_case()
 
     def _rr_case(self):
         child = self.right
