@@ -78,6 +78,7 @@ class Node:
         self.left = child.right
         child.right.parent = self
         child.right = self.left.left
+        child.left.parent = child
         self.left.left = child
         child.parent = self.left
         self._ll_case()
