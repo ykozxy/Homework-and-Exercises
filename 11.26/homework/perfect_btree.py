@@ -1,11 +1,11 @@
-class BinaryTree:
+class TreeNode:
     def __init__(self, root_obj):
-        self.key = root_obj
-        self.leftChild = None
-        self.rightChild = None
+        self.val = root_obj
+        self.left = None
+        self.right = None
 
     def is_leaf(self):
-        if self.leftChild is None and self.rightChild is None:
+        if self.left is None and self.right is None:
             return True
         return False
 
@@ -13,15 +13,15 @@ class BinaryTree:
 
 def is_binary_tree(head):
     """
-    :type head: BinaryTree
+    :type head: TreeNode
     :param head:
     :return:
     """
-    if head.leftChild is None and head.rightChild is None:
+    if head.left is None and head.right is None:
         return True
-    elif head.leftChild is not None and head.rightChild is not None:
-        lft = head.leftChild
-        right = head.rightChild
+    elif head.left is not None and head.right is not None:
+        lft = head.left
+        right = head.right
         if is_binary_tree(lft) and is_binary_tree(right):
             return True
         else:
@@ -32,7 +32,7 @@ def is_binary_tree(head):
 
 def perfect_tree(head):
     """
-    :type head: BinaryTree
+    :type head: TreeNode
     :param head:
     :return:
     """
@@ -46,15 +46,15 @@ def perfect_tree(head):
         for node in output[-1]:
             if node is None:
                 continue
-            elif not node.is_leaf():
+            elif not (node.left is None and node.right is None):
                 end = False
         if end:
             break
 
         # Update nodes
         for node in output[-1]:
-            temp_lst.append(node.leftChild)
-            temp_lst.append(node.rightChild)
+            temp_lst.append(node.left)
+            temp_lst.append(node.right)
         output.append(temp_lst)
 
     for node_lst in output[: -2]:
@@ -73,11 +73,11 @@ def perfect_tree(head):
     return True
 
 
-a = BinaryTree(1)
-a.leftChild = BinaryTree(1)
-a.rightChild = BinaryTree(1)
-a.leftChild.leftChild = BinaryTree(1)
-a.leftChild.rightChild = BinaryTree(1)
-a.rightChild.rightChild = BinaryTree(1)
+a = TreeNode(1)
+a.left = TreeNode(1)
+a.right = TreeNode(1)
+a.left.left = TreeNode(1)
+a.left.right = TreeNode(1)
+a.right.right = TreeNode(1)
 
 print(perfect_tree(a))

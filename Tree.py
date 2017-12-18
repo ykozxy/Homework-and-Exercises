@@ -1,7 +1,13 @@
-class TreeNode:
-    def __init__(self, key, val, left=None, right=None, parent=None):
-        self.key = key
-        self.val = val
+import turtle
+
+
+class TreeNode(object):
+    def __init__(self, *args, left=None, right=None, parent=None):
+        assert len(args) <= 2, 'Too many arguments!!'
+        if len(args) == 1:
+            self.val = args[0]
+        else:
+            self.key, self.val = args
         self.left = left
         self.right = right
         self.parent = parent
@@ -44,6 +50,7 @@ class BST:
 
     def _put(self, key, value, current_node):
         """
+
         :type current_node: TreeNode
         :param key:
         :param value:
@@ -54,7 +61,7 @@ class BST:
             if current_node.has_left_child():
                 self._put(key, value, current_node.left)
             else:
-                current_node.leftChile = TreeNode(key=key, val=value, parent=current_node)
+                current_node.leftChile = TreeNode(key, value, parent=current_node)
         else:
             if current_node.has_right_child():
                 self._put(key, value, current_node.right)
@@ -152,24 +159,197 @@ class BST:
         return current_node
 
 
+# Generate and output Tree
+def draw_tree(root):
+    """
+    This function can use turtle to draw a binary tree
+    :type root:TreeNode
+    :param root:
+    :return:
+    """
+
+    def height(head):
+        return 1 + max(height(head.left), height(head.right)) if head else -1
+
+    def jumpto(x, y):
+        t.penup()
+        t.goto(x, y)
+        t.pendown()
+
+    def draw(node, x, y, dx):
+        if node:
+            t.goto(x, y)
+            jumpto(x, y - 20)
+            t.write(node.val, align='center')
+            draw(node.left, x - dx, y - 60, dx / 2)
+            jumpto(x, y - 20)
+            draw(node.right, x + dx, y - 60, dx / 2)
+
+    t = turtle.Turtle()
+    t.speed(0)
+    turtle.delay(0)
+    h = height(root)
+    jumpto(0, 30 * h)
+    draw(root, 0, 30 * h, 40 * h)
+    t.hideturtle()
+    turtle.mainloop()
+
+
+def serialize(node):
+    """
+    This function can turn a binary tree into a list
+    :type node:TreeNode
+    :param node:
+    :return:
+    """
+
+    def doit(head):
+        if head:
+            vals.append(str(head.val))
+            doit(head.left)
+            doit(head.right)
+        else:
+            vals.append('null')
+
+    vals = []
+    doit(node)
+    return vals
+
+
+def deserialize(lst):
+    """
+    This function can turn a formatted list into a binary tree
+    :type lst: list
+    :param lst:
+    :return:
+    """
+    if lst is None:
+        return None
+    nodes = [None if val == 'null' else TreeNode(int(val)) for val in lst]
+    childs = nodes[::-1]
+    root = childs.pop()
+    for node in nodes:
+        if node:
+            if childs:
+                node.left = childs.pop()
+            if childs:
+                node.right = childs.pop()
+    return root
+
+
+def zigzag(head):
+    """
+    :type head: BinaryTree
+    :param head:
+    :return:
+    """
+    output = [[head]]
+
+    while True:
+        # Add Nodes
+        temp_lst = []
+
+        # Exit?
+        end = True
+        for node in output[-1]:
+            if node is None:
+                continue
+            elif not node.is_leaf():
+                end = False
+        if end:
+            break
+
+        # Update nodes
+        for node in output[-1]:
+            temp_lst.append(node.left)
+            temp_lst.append(node.right)
+        output.append(temp_lst)
+
+    # Output
+    reverse = False
+    for node_lst in output:
+        print('\n', end='')
+        if reverse:
+            node_lst.reverse()
+        for element in node_lst:
+            if element is None:
+                print('Null', end=' ')
+            else:
+                print(element.val, end=' ')
+        reverse = not reverse
+
+
 def pre_order(tree):
     """
 
     :type tree: TreeNode
     """
     if tree is not None:
-        print(tree.key)
+        print(tree.val)
         pre_order(tree.left)
         pre_order(tree.right)
 
 
-a = BST()
+def post_order(tree):
+    """
+    :type tree: TreeNode
+    :param tree:
+    :return:
+    """
+    if tree is not None:
+        pre_order(tree.left)
+        pre_order(tree.right)
+        print(tree.val)
 
 
-for i in range(100):
-    a[i] = i
+def in_order(tree):
+    """
+    :type tree: TreeNode
+    :param tree:
+    :return:
+    """
+    if tree is not None:
+        pre_order(tree.left)
+        print(tree.val)
+        pre_order(tree.right)
 
-print(a[3])
-a.delete(3)
-print(a[3])
-pre_order(a.root)
+
+# Relevant operation of sorting trees
+def merge_tree(tree1, tree2):  # todo: This function has some issues
+    """
+    :type tree1: TreeNode
+    :type tree2: TreeNode
+    """
+    if tree1 is None:
+        return tree2
+    elif tree2 is None:
+        return tree1
+    else:
+        r = TreeNode(tree1.val + tree2.val)
+        r.leftChild = merge_tree(tree1.left, tree2.left)
+        r.rightChild = merge_tree(tree1.right, tree2.right)
+        return r
+
+
+def is_binary_tree(head):
+    """
+    :type head: TreeNode
+    :param head:
+    :return:
+    """
+    if head.left is None and head.right is None:
+        return True
+    elif head.left is not None and head.right is not None:
+        lft = head.left
+        right = head.right
+        if is_binary_tree(lft) and is_binary_tree(right):
+            return True
+        else:
+            return False
+    else:
+        return False
+
+
+
+if __name__ == '__main__':
+    pass

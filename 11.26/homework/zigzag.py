@@ -1,11 +1,11 @@
 class BinaryTree:
     def __init__(self, root_obj):
-        self.key = root_obj
-        self.leftChild = None
-        self.rightChild = None
+        self.val = root_obj
+        self.left = None
+        self.right = None
 
     def is_leaf(self):
-        if self.leftChild is None and self.rightChild is None:
+        if self.left is None and self.right is None:
             return True
         return False
 
@@ -34,8 +34,8 @@ def zigzag(head):
 
         # Update nodes
         for node in output[-1]:
-            temp_lst.append(node.leftChild)
-            temp_lst.append(node.rightChild)
+            temp_lst.append(node.left)
+            temp_lst.append(node.right)
         output.append(temp_lst)
 
     # Output
@@ -48,13 +48,13 @@ def zigzag(head):
             if element is None:
                 print('Null', end=' ')
             else:
-                print(element.key, end=' ')
+                print(element.val, end=' ')
         reverse = not reverse
 
 
 a = BinaryTree(3)
-a.leftChild = BinaryTree(9)
-a.rightChild = BinaryTree(20)
-a.rightChild.leftChild = BinaryTree(15)
-a.rightChild.rightChild = BinaryTree(7)
+a.left = BinaryTree(9)
+a.right = BinaryTree(20)
+a.right.left = BinaryTree(15)
+a.right.right = BinaryTree(7)
 zigzag(a)
