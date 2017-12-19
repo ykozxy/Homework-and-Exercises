@@ -2,18 +2,18 @@ class TreeNode:
     def __init__(self, key, val, left=None, right=None, parent=None):
         self.key = key
         self.value = val
-        self.leftChild = left
-        self.rightChild = right
+        self.left = left
+        self.right = right
         self.parent = parent
 
     def has_left_child(self):
-        return self.leftChild
+        return self.left
 
     def has_right_child(self):
-        return self.rightChild
+        return self.right
 
     def is_leaf(self):
-        return not (self.leftChild or self.rightChild)
+        return not (self.left or self.right)
 
 
 def reverse_tree(node):
@@ -23,23 +23,23 @@ def reverse_tree(node):
     :return:
     """
     if node.has_left_child() and node.has_right_child():
-        node.leftChild, node.rightChild = node.rightChild, node.leftChild
-        reverse_tree(node.leftChild)
-        reverse_tree(node.rightChild)
+        node.left, node.right = node.right, node.left
+        reverse_tree(node.left)
+        reverse_tree(node.right)
     elif node.has_left_child() and not node.has_right_child():
-        node.leftChild, node.rightChild = node.rightChild, node.leftChild
-        reverse_tree(node.rightChild)
+        node.left, node.right = node.right, node.left
+        reverse_tree(node.right)
     elif not node.has_left_child() and node.has_right_child():
-        node.leftChild, node.rightChild = node.rightChild, node.leftChild
-        reverse_tree(node.leftChild)
+        node.left, node.right = node.right, node.left
+        reverse_tree(node.left)
     else:
         pass
 
 
 a = TreeNode(1, 1)
-a.leftChild = TreeNode(2, 2)
-a.rightChild = TreeNode(3, 3)
-a.rightChild.rightChild = TreeNode(4, 4)
-a.leftChild.leftChild = TreeNode(5, 5)
-a.leftChild.rightChild = TreeNode(6, 6)
+a.left = TreeNode(2, 2)
+a.right = TreeNode(3, 3)
+a.right.right = TreeNode(4, 4)
+a.left.left = TreeNode(5, 5)
+a.left.right = TreeNode(6, 6)
 reverse_tree(a)

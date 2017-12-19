@@ -36,6 +36,139 @@ class TreeNode(object):
             self.parent.rightChild = self
 
 
+# AVL tree
+class Avl:
+
+    def __init__(self, value, root=False):
+        self.value = value if not root else None
+        self.is_root = root
+        self.parent = None
+        self.left = None
+        self.right = None
+
+    @property
+    def balance(self):
+        left_height = self.left.height if self.left else 0
+        right_height = self.right.height if self.right else 0
+        return right_height - left_height
+
+    @property
+    def height(self):
+        left_height = self.left.height if self.left else 0
+        right_height = self.right.height if self.right else 0
+        return 1 + max(left_height, right_height)
+
+    @property
+    def grandpa(self):
+        if self.parent:
+            return self.parent.parent
+        else:
+            return None
+
+    def insert(self, value):
+        if self.value is None or value > self.value:
+            if self.right is None:
+                self.right = Avl(value, root=False)
+                self.right.parent = self
+                self.right.balance_grandpa()
+            else:
+                self.right.insert(value)
+        elif value < self.value:
+            if self.left is None:
+                self.left = Avl(value, root=False)
+                self.left.parent = self
+                self.left.balance_grandpa()
+            else:
+                self.left.insert(value)
+
+    def balance_grandpa(self):
+        if self.grandpa and self.grandpa.is_root:
+            pass
+        elif self.grandpa and not self.is_root:
+            self.grandpa._balance()
+        else:
+            pass
+        return
+
+    def _balance(self):
+        if self.balance > 1:
+            if self.right.balance < 0:
+                self._rl_case()
+            elif self.right.balance > 0:
+                self._rr_case()
+        elif self.balance < -1:
+            if self.left.balance < 0:
+                self._ll_case()
+            elif self.left.balance > 0:
+                self._lr_case()
+
+    def _ll_case(self):
+        child = self.left
+        if self.parent.is_root or self.value > self.parent.value:
+            self.parent.right = child
+        else:
+            self.parent.left = child
+
+        child.parent, self.parent = self.parent, child
+        child.right, self.left = self, child.right
+
+    def _lr_case(self):
+        child = self.left
+        self.left = child.right
+        child.right.parent = self
+        child.right = self.left.left
+        child.left.parent = child
+        self.left.left = child
+        child.parent = self.left
+        self._ll_case()
+
+    def _rl_case(self):
+        child = self.right
+        self.right = child.left
+        self.right.parent = self
+        child.left = self.right.right
+        self.right.parent = child
+        self.right.right = child
+        child.parent = self.right
+        self._rr_case()
+
+    def _rr_case(self):
+        child = self.right
+        if self.parent.is_root or self.value > self.parent.value:
+            self.parent.right = child
+        else:
+            self.parent.left = child
+
+        child.parent, self.parent = self.parent, child
+        child.left, self.right = self, child.left
+
+
+def is_avl(node) -> bool:
+    """
+    :type node: TreeNode
+    :param node:
+    :return:
+    """
+    def deep(head):
+        """
+        :type head: TreeNode
+        :param head:
+        :return:
+        """
+        if head is None:
+            return 0
+        left = deep(head.left)
+        right = deep(head.right)
+
+        if left == -1 or right == -1 or abs(left - right) > 1:
+            return -1
+
+        return 1 + max(left, right)
+
+    return deep(node) != -1
+
+
+# Binary search tree
 class BST:
     def __init__(self):
         self.root = None
@@ -159,8 +292,73 @@ class BST:
         return current_node
 
 
+def total_number_bst(num) -> int:
+    """
+    This function can calculate the total BST can be generate by using x nodes
+    :type num: int
+    :param num:
+    :return:
+    """
+    value = [1, 1]
+    for i in range(num):
+        value.append(0)
+
+    for i in range(2, num + 1):
+        for j in range(1, i + 1):
+            value[i] += value[j - 1] * value[i - j]
+
+    return value[num]
+
+
+def is_bst(node) -> bool:
+    """
+    :type node: TreeNode
+    :param node:
+    :return:
+    """
+    if not node:
+        return True
+    current_key = node.key
+    if node.is_leaf():
+        return True
+    elif node.has_left_child() and node.has_right_child():
+        if node.left.key >= current_key:
+            return False
+        if node.right.key <= current_key:
+            return False
+        return is_bst(node.left) and is_bst(node.right)
+    elif node.has_left_child() and not node.has_right_child():
+        if node.left.key >= current_key:
+            return False
+        return is_bst(node.left) and is_bst(node.right)
+    elif not node.has_left_child() and node.has_right_child():
+        if node.right.key <= current_key:
+            return False
+        return is_bst(node.left) and is_bst(node.right)
+
+
+def generate_bst(n) -> list:
+    """
+    :type n: int
+    :param n:
+    :return:
+    """
+    def generate(first, last):
+        trees = []
+        for root in range(first, last + 1):
+            for left in generate(first, root - 1):
+                for right in generate(root + 1, last):
+                    node = TreeNode(root)
+                    node.left = left
+                    node.right = right
+                    trees += node,
+        return trees or [None]
+
+    return generate(1, n)
+
+
 # Generate and output Tree
-def draw_tree(root):
+def draw_tree(root) -> None:
     """
     This function can use turtle to draw a binary tree
     :type root:TreeNode
@@ -195,7 +393,7 @@ def draw_tree(root):
     turtle.mainloop()
 
 
-def serialize(node):
+def serialize(node) -> list:
     """
     This function can turn a binary tree into a list
     :type node:TreeNode
@@ -216,7 +414,7 @@ def serialize(node):
     return vals
 
 
-def deserialize(lst):
+def deserialize(lst) -> TreeNode or None:
     """
     This function can turn a formatted list into a binary tree
     :type lst: list
@@ -237,7 +435,7 @@ def deserialize(lst):
     return root
 
 
-def zigzag(head):
+def zigzag(head) -> None:
     """
     :type head: BinaryTree
     :param head:
@@ -279,7 +477,7 @@ def zigzag(head):
         reverse = not reverse
 
 
-def pre_order(tree):
+def pre_order(tree) -> None:
     """
 
     :type tree: TreeNode
@@ -290,7 +488,7 @@ def pre_order(tree):
         pre_order(tree.right)
 
 
-def post_order(tree):
+def post_order(tree) -> None:
     """
     :type tree: TreeNode
     :param tree:
@@ -302,7 +500,7 @@ def post_order(tree):
         print(tree.val)
 
 
-def in_order(tree):
+def in_order(tree) -> None:
     """
     :type tree: TreeNode
     :param tree:
@@ -331,7 +529,7 @@ def merge_tree(tree1, tree2):  # todo: This function has some issues
         return r
 
 
-def is_binary_tree(head):
+def is_binary_tree(head) -> bool:
     """
     :type head: TreeNode
     :param head:
@@ -349,6 +547,25 @@ def is_binary_tree(head):
     else:
         return False
 
+
+def reverse_tree(node) -> None:
+    """
+    :type node:TreeNode
+    :param node:
+    :return:
+    """
+    if node.has_left_child() and node.has_right_child():
+        node.left, node.right = node.right, node.left
+        reverse_tree(node.left)
+        reverse_tree(node.right)
+    elif node.has_left_child() and not node.has_right_child():
+        node.left, node.right = node.right, node.left
+        reverse_tree(node.right)
+    elif not node.has_left_child() and node.has_right_child():
+        node.left, node.right = node.right, node.left
+        reverse_tree(node.left)
+    else:
+        pass
 
 
 if __name__ == '__main__':

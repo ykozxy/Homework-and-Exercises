@@ -10,7 +10,7 @@ class TreeNode(object):
         return False
 
 
-def generate_trees(n):
+def generate_bst(n):
     def generate(first, last):
         trees = []
         for root in range(first, last + 1):
@@ -84,7 +84,7 @@ def pre_order(tree):
         return []
 
 
-a = generate_trees(4)
+a = generate_bst(4)
 for i in a:
     print(pre_order(i))
     print('----------------------------')

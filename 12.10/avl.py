@@ -1,4 +1,4 @@
-class Node:
+class Avl:
 
     def __init__(self, value, root=False):
         self.value = value if not root else None
@@ -29,14 +29,14 @@ class Node:
     def insert(self, value):
         if self.value is None or value > self.value:
             if self.right is None:
-                self.right = Node(value, root=False)
+                self.right = Avl(value, root=False)
                 self.right.parent = self
                 self.right.balance_grandpa()
             else:
                 self.right.insert(value)
         elif value < self.value:
             if self.left is None:
-                self.left = Node(value, root=False)
+                self.left = Avl(value, root=False)
                 self.left.parent = self
                 self.left.balance_grandpa()
             else:
@@ -105,7 +105,7 @@ class Node:
 
 
 values = [5, 3, 2]
-root = Node(None, root=True)
+root = Avl(None, root=True)
 for i in values:
     root.insert(i)
 
