@@ -12,20 +12,20 @@ def deserialize(lst):
     if lst is None:
         return None
     nodes = [None if val == 'null' else TreeNode(int(val)) for val in lst]
-    childs = nodes[::-1]
-    root = childs.pop()
+    child = nodes[::-1]
+    root = child.pop()
     for node in nodes:
         if node:
-            if childs: node.left = childs.pop()
-            if childs: node.right = childs.pop()
+            if child: node.left = child.pop()
+            if child: node.right = child.pop()
     return root
 
 
 def draw_tree(root):
-    def height(root):
-        return 1 + max(height(root.left), height(root.right)) if root else -1
+    def height(head):
+        return 1 + max(height(head.left), height(head.right)) if head else -1
 
-    def jumpto(x, y):
+    def jump_to(x, y):
         t.penup()
         t.goto(x, y)
         t.pendown()
@@ -33,17 +33,17 @@ def draw_tree(root):
     def draw(node, x, y, dx):
         if node:
             t.goto(x, y)
-            jumpto(x, y - 20)
+            jump_to(x, y - 20)
             t.write(node.val, align='center')
             draw(node.left, x - dx, y - 60, dx / 2)
-            jumpto(x, y - 20)
+            jump_to(x, y - 20)
             draw(node.right, x + dx, y - 60, dx / 2)
 
     t = turtle.Turtle()
     t.speed(0)
     turtle.delay(0)
     h = height(root)
-    jumpto(0, 30 * h)
+    jump_to(0, 30 * h)
     draw(root, 0, 30 * h, 40 * h)
     t.hideturtle()
     turtle.mainloop()

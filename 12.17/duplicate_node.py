@@ -1,5 +1,5 @@
-from serialize import *
-from generate_tree import *
+from Tree import deserialize, draw_tree
+
 
 class TreeNode:
     def __init__(self, x):
@@ -19,7 +19,7 @@ def has_duplicate_node(head):
         if not node:
             return
         elif node.val in total_node:
-            if node.val not in [a.val for a in dul_node]:
+            if node.val not in [r.val for r in dul_node]:
                 dul_node.append(node)
 
         total_node.append(node.val)

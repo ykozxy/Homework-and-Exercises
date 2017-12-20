@@ -1,32 +1,58 @@
+from Tree import deserialize, draw_tree
+
+
 class TreeNode:
     def __init__(self, x):
         self.val = x
         self.left = None
         self.right = None
 
-first = None
-second = None
-prev = TreeNode(-1000000)
 
-def revocer_tree(root):
-    inorder_travesal(root)
-    first.val, second.val = second.val, first.val
+def recover_tree(node):
+    first = None
+    second = None
+    prev = TreeNode(-1000000)
 
-def inorder_travesal(root):
-    global first, second, prev
-    if root is None:
-        return
-    inorder_travesal(root.left)
-    if first is None and prev.val >= root.val:
-        first = prev
+    def start(root):
+        inorder_travesal(root)
+        first.val, second.val = second.val, first.val
 
-    if first is not None and prev.val >= root.val:
-        second = root
+    def inorder_travesal(root):
+        nonlocal first, second, prev
+        if root is None:
+            return
+        inorder_travesal(root.left)
+        if first is None and prev.val >= root.val:
+            first = prev
 
-    prev = root
-    inorder_travesal(root.right)
+        if first is not None and prev.val >= root.val:
+            second = root
 
-r = TreeNode(3)
-r.left = TreeNode(4)
-r.right = TreeNode(2)
-r.right.right = TreeNode(5)
+        prev = root
+        inorder_travesal(root.right)
+
+    start(node)
+
+
+# Test data 1
+a = deserialize([5,
+                 2, 7,
+                 9, 3, 6, 1])
+draw_tree(a, notstay=3)
+recover_tree(a)
+draw_tree(a, notstay=3)
+
+# Test data 2
+a = deserialize([8,
+                 5, 11,
+                 'null', 'null', 12, 9])
+draw_tree(a, notstay=3)
+recover_tree(a)
+draw_tree(a, notstay=3)
+
+# Test data 3
+a = deserialize([2,
+                 'null', 1])
+draw_tree(a, notstay=3)
+recover_tree(a)
+draw_tree(a, notstay=3)

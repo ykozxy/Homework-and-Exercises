@@ -1,4 +1,5 @@
 import turtle
+import time
 
 
 class TreeNode(object):
@@ -40,7 +41,7 @@ class TreeNode(object):
 class Avl:
 
     def __init__(self, value, root=False):
-        self.value = value if not root else None
+        self.val = value if not root else None
         self.is_root = root
         self.parent = None
         self.left = None
@@ -66,14 +67,14 @@ class Avl:
             return None
 
     def insert(self, value):
-        if self.value is None or value > self.value:
+        if self.val is None or value > self.val:
             if self.right is None:
                 self.right = Avl(value, root=False)
                 self.right.parent = self
                 self.right.balance_grandpa()
             else:
                 self.right.insert(value)
-        elif value < self.value:
+        elif value < self.val:
             if self.left is None:
                 self.left = Avl(value, root=False)
                 self.left.parent = self
@@ -104,7 +105,7 @@ class Avl:
 
     def _ll_case(self):
         child = self.left
-        if self.parent.is_root or self.value > self.parent.value:
+        if self.parent.is_root or self.val > self.parent.value:
             self.parent.right = child
         else:
             self.parent.left = child
@@ -134,7 +135,7 @@ class Avl:
 
     def _rr_case(self):
         child = self.right
-        if self.parent.is_root or self.value > self.parent.value:
+        if self.parent.is_root or self.val > self.parent.value:
             self.parent.right = child
         else:
             self.parent.left = child
@@ -300,12 +301,12 @@ def total_number_bst(num) -> int:
     :return:
     """
     value = [1, 1]
-    for i in range(num):
+    for p in range(num):
         value.append(0)
 
-    for i in range(2, num + 1):
-        for j in range(1, i + 1):
-            value[i] += value[j - 1] * value[i - j]
+    for p in range(2, num + 1):
+        for j in range(1, p + 1):
+            value[p] += value[j - 1] * value[p - j]
 
     return value[num]
 
@@ -358,10 +359,11 @@ def generate_bst(n) -> list:
 
 
 # Generate and output Tree
-def draw_tree(root) -> None:
+def draw_tree(root, notstay=False) -> None:
     """
     This function can use turtle to draw a binary tree
-    :type root:TreeNode
+    :type notstay: False or int
+    :type root:TreeNode or Avl
     :param root:
     :return:
     """
@@ -382,7 +384,6 @@ def draw_tree(root) -> None:
             draw(node.left, x - dx, y - 60, dx / 2)
             jumpto(x, y - 20)
             draw(node.right, x + dx, y - 60, dx / 2)
-
     t = turtle.Turtle()
     t.speed(0)
     turtle.delay(0)
@@ -390,7 +391,11 @@ def draw_tree(root) -> None:
     jumpto(0, 30 * h)
     draw(root, 0, 30 * h, 40 * h)
     t.hideturtle()
-    turtle.mainloop()
+    if not notstay:
+        turtle.mainloop()
+    else:
+        time.sleep(notstay)
+        t.clear()
 
 
 def serialize(node) -> list:
@@ -513,7 +518,7 @@ def in_order(tree) -> None:
 
 
 # Relevant operation of sorting trees
-def merge_tree(tree1, tree2):  # todo: This function has some issues
+def merge_tree(tree1, tree2) -> TreeNode:
     """
     :type tree1: TreeNode
     :type tree2: TreeNode
@@ -524,8 +529,8 @@ def merge_tree(tree1, tree2):  # todo: This function has some issues
         return tree1
     else:
         r = TreeNode(tree1.val + tree2.val)
-        r.leftChild = merge_tree(tree1.left, tree2.left)
-        r.rightChild = merge_tree(tree1.right, tree2.right)
+        r.left = merge_tree(tree1.left, tree2.left)
+        r.right = merge_tree(tree1.right, tree2.right)
         return r
 
 
@@ -568,5 +573,64 @@ def reverse_tree(node) -> None:
         pass
 
 
+def recover_tree(node) -> None:
+    """
+    :type node: TreeNode
+    :param node:
+    :return:
+    """
+    first = None
+    second = None
+    prev = TreeNode(-1000000)
+
+    def start(root):
+        inorder_travesal(root)
+        first.val, second.val = second.val, first.val
+
+    def inorder_travesal(root):
+        nonlocal first, second, prev
+        if root is None:
+            return
+        inorder_travesal(root.left)
+        if first is None and prev.val >= root.val:
+            first = prev
+
+        if first is not None and prev.val >= root.val:
+            second = root
+
+        prev = root
+        inorder_travesal(root.right)
+
+    start(node)
+
+
+def has_duplicate_node(head):
+    def dul(node):
+        """
+        :type node:TreeNode
+        :param node:
+        :return:
+        """
+        nonlocal total_node, dul_node
+        if not node:
+            return
+        elif node.val in total_node:
+            if node.val not in [a.val for a in dul_node]:
+                dul_node.append(node)
+
+        total_node.append(node.val)
+        dul(node.left)
+        dul(node.right)
+
+    total_node = []
+    dul_node = []
+    dul(head)
+    return dul_node
+
+
 if __name__ == '__main__':
-    pass
+    a = deserialize([5,
+                     4, 6])
+    b = deserialize([7,
+                     1, 1])
+    draw_tree(merge_tree(a, b))

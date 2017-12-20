@@ -1,7 +1,10 @@
+from Tree import draw_tree, deserialize
+
+
 class TreeNode:
     def __init__(self, key, val, left=None, right=None, parent=None):
         self.key = key
-        self.value = val
+        self.val = val
         self.left = left
         self.right = right
         self.parent = parent
@@ -36,10 +39,10 @@ def reverse_tree(node):
         pass
 
 
-a = TreeNode(1, 1)
-a.left = TreeNode(2, 2)
-a.right = TreeNode(3, 3)
-a.right.right = TreeNode(4, 4)
-a.left.left = TreeNode(5, 5)
-a.left.right = TreeNode(6, 6)
+a = deserialize([1,
+                 2, 3,
+                 4, 5, 6, 7,
+                 8, 9, 1, 2, 'null', 'null', 5, 6])
+draw_tree(a, 5)
 reverse_tree(a)
+draw_tree(a)
