@@ -1,5 +1,6 @@
 import os
 import pickle
+import sys
 
 import Generate_graph
 
@@ -53,7 +54,50 @@ class Graph:
         return iter(self.vert_list.values())
 
 
-if 'WordGraph.graph' not in os.listdir(os.getcwd()):
-    Generate_graph.__main__()
-with open('WordGraph.graph', 'rb') as f:
-    word_graph = pickle.load(f)
+def __main__():
+    sys.setrecursionlimit(7000)
+
+    if 'WordGraph.graph' not in os.listdir(os.getcwd()):
+        Generate_graph.__main__()
+    with open('WordGraph.graph', 'rb') as f:
+        word_graph: Graph = pickle.load(f)
+
+    # w1, w2 = input('First word: '), input('Second word: ')
+    w1, w2 = 'bill', 'biff'
+
+    print("Calculating......")
+    if w1 not in word_graph.vert_list.keys():
+        return 'Fail, word 1 not in dict!'
+    elif w2 not in word_graph.vert_list.keys():
+        return 'Fail, word 2 not in dict!'
+
+    if not word_graph.vert_list[w1].connected_to or not word_graph.vert_list[w2].connected_to:
+        return 'No ways! 0 '
+
+    line = [word_graph.vert_list[w1]]
+    visited = set({})
+
+    def calculate(final):
+        nonlocal line, visited, word_graph
+        # Is found
+        for each in line[-1].connected_to:
+            if final == each.id:
+                return True
+
+        # Others
+        for each in line[-1].connected_to:
+            if each in visited:
+                continue
+            visited.add(each)
+            line.append(each)
+            if calculate(final) is True:
+                return True
+            else:
+                line.pop()
+
+    calculate(w2)
+    return [x.id for x in line] + [w2]
+
+
+if __name__ == '__main__':
+    print(__main__())

@@ -59,6 +59,10 @@ def is_vicinity(word1, word2):
     return count >= 0
 
 
+def add_word(word_graph: Graph, word: str):
+    pass
+
+
 def __main__():
     sys.setrecursionlimit(6000)
 
@@ -519,7 +523,7 @@ def __main__():
     word_graph = Graph()
 
     print('Adding vertex...')
-    for each in range(len(total_words)):
+    for each in total_words:
         word_graph.add_vertex(each)
 
     print('Generating graph...')
@@ -529,13 +533,14 @@ def __main__():
         if count == 50:
             print(process + '%%   %s' % w1)
         count += 1 if count < 50 else -50
-        for pos_w2, w2 in enumerate(total_words[pos_w1 + 1:]):
+        for w2 in total_words[pos_w1 + 1:]:
             if is_vicinity(w1, w2):
-                word_graph.add_edge(pos_w1, pos_w2)
+                word_graph.add_edge(w1, w2)
 
     print('Saving data......')
     with open('WordGraph.graph', 'wb') as final:
         pickle.dump(word_graph, final)
+    print('Data saved!')
 
 
 if __name__ == '__main__':
