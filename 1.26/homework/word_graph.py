@@ -1,5 +1,3 @@
-import os
-import pickle
 import sys
 
 import Generate_graph
@@ -13,7 +11,7 @@ class Vertex:
     def add_neighbor(self, nbr, weight=0):
         self.connected_to[nbr] = weight
 
-    def __str__(self):
+    def __repr__(self):
         return str(self.id) + ' connected to: ' + str([x.id for x in self.connected_to])
 
     def get_connections(self):
@@ -46,6 +44,7 @@ class Graph:
         if t not in self.vert_list:
             self.add_vertex(t)
         self.vert_list[f].add_neighbor(self.vert_list[t], weight=cost)
+        self.vert_list[t].add_neighbor(self.vert_list[f], weight=cost)
 
     def get_vertices(self):
         return self.vert_list.keys()
@@ -54,31 +53,13 @@ class Graph:
         return iter(self.vert_list.values())
 
 
-def __main__():
-    sys.setrecursionlimit(7000)
-
-    if 'WordGraph.graph' not in os.listdir(os.getcwd()):
-        Generate_graph.__main__()
-    with open('WordGraph.graph', 'rb') as f:
-        word_graph: Graph = pickle.load(f)
-
-    # w1, w2 = input('First word: '), input('Second word: ')
-    w1, w2 = 'bill', 'biff'
-
-    print("Calculating......")
-    if w1 not in word_graph.vert_list.keys():
-        return 'Fail, word 1 not in dict!'
-    elif w2 not in word_graph.vert_list.keys():
-        return 'Fail, word 2 not in dict!'
-
-    if not word_graph.vert_list[w1].connected_to or not word_graph.vert_list[w2].connected_to:
-        return 'No ways! 0 '
-
+def deep_search(word_graph, w1, w2):
     line = [word_graph.vert_list[w1]]
+    length = 0
     visited = set({})
 
     def calculate(final):
-        nonlocal line, visited, word_graph
+        nonlocal line, visited, word_graph, length
         # Is found
         for each in line[-1].connected_to:
             if final == each.id:
@@ -90,14 +71,43 @@ def __main__():
                 continue
             visited.add(each)
             line.append(each)
-            if calculate(final) is True:
+            length += 1
+            if calculate(final):
                 return True
             else:
                 line.pop()
+                length -= 1
 
     calculate(w2)
-    return [x.id for x in line] + [w2]
+    return length, [x.id for x in line] + [w2]
+
+
+def broad_search(word_graph, w1, w2):  # TODO: Finish it
+    pass
+
+
+def __main__(word_graph, t='deep'):
+    sys.setrecursionlimit(7000)
+
+    w1, w2 = input('First word: '), input('Second word: ')
+
+    print("Calculating......")
+    if w1 not in word_graph.vert_list.keys():
+        return 'Fail, word 1 not in dict!'
+    elif w2 not in word_graph.vert_list.keys():
+        return 'Fail, word 2 not in dict!'
+
+    if not word_graph.vert_list[w1].connected_to or not word_graph.vert_list[w2].connected_to:
+        return 'No ways! 0 '
+
+    if t == 'deep':
+        return deep_search(word_graph, w1, w2)
+    elif t == 'broad':
+        return broad_search(word_graph, w1, w2)
 
 
 if __name__ == '__main__':
-    print(__main__())
+    print('Loading...')
+    word_graph = Generate_graph.read_data()
+    while True:
+        print(__main__(word_graph, t='deep'))

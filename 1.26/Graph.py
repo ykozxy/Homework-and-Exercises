@@ -39,6 +39,7 @@ class Graph:
         if t not in self.vert_list:
             self.add_vertex(t)
         self.vert_list[f].add_neighbor(self.vert_list[t], weight=cost)
+        self.vert_list[t].add_neighbor(self.vert_list[f], weight=cost)
 
     def get_vertices(self):
         return self.vert_list.keys()
