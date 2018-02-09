@@ -42,7 +42,6 @@ class Graph:
         if t not in self.vert_list:
             self.add_vertex(t)
         self.vert_list[f].add_neighbor(self.vert_list[t], weight=cost)
-        self.vert_list[t].add_neighbor(self.vert_list[f], weight=cost)
 
     def get_vertices(self):
         return self.vert_list.keys()
@@ -57,6 +56,17 @@ def is_vicinity(word1, word2):
         if word1[i] != word2[i]:
             count -= 1
     return count >= 0
+
+
+def add_word(word_graph: Graph, word: str):
+    if word in word_graph.vert_list.keys():
+        return
+    word_graph.add_vertex(word)
+    for each in word_graph.vert_list.keys():
+        if is_vicinity(word, each):
+            word_graph.add_edge(word, each)
+            word_graph.add_edge(each, word)
+    return
 
 
 def save_data(word_graph: Graph):
@@ -86,6 +96,7 @@ def read_data() -> Graph:
             words = line.split()
             for i in words[1:]:
                 word_graph.add_edge(words[0], i)
+                word_graph.add_edge(i, words[0])
             line = f.readline()
     return word_graph
 
@@ -119,6 +130,7 @@ def __main__(save=True):
         for w2 in total_words[pos_w1 + 1:]:
             if is_vicinity(w1, w2):
                 word_graph.add_edge(w1, w2)
+                word_graph.add_edge(w2, w1)
 
     if save:
         print('Saving data......')

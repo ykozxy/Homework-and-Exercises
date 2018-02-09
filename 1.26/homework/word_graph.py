@@ -44,7 +44,6 @@ class Graph:
         if t not in self.vert_list:
             self.add_vertex(t)
         self.vert_list[f].add_neighbor(self.vert_list[t], weight=cost)
-        self.vert_list[t].add_neighbor(self.vert_list[f], weight=cost)
 
     def get_vertices(self):
         return self.vert_list.keys()
@@ -82,11 +81,47 @@ def deep_search(word_graph, w1, w2):
     return length, [x.id for x in line] + [w2]
 
 
-def broad_search(word_graph, w1, w2):  # TODO: Finish it
-    pass
+def broad_search(word_graph: Graph, w1: str, w2: str):
+    visited = set({})
+    final = [w2]
+    process = [{w1: word_graph.vert_list[w1]}]
+
+    def calculate():
+        nonlocal visited, final, process, w1, w2
+        # If find
+        for each in process[-1].keys():
+            if process[-1][each].id == w2:
+                return True
+
+        # Create new dict
+        process.append({})
+        for word in process[-2].keys():
+            if process[-2][word].id in visited:
+                continue
+            visited.add(process[-2][word].id)
+            for i in process[-2][word].connected_to.keys():
+                if i.id in visited:
+                    continue
+                process[-1][i.id] = i
+
+        # Recursive sef
+        if calculate():
+            return True
+
+    # Find path
+    calculate()
+    last = w2
+    for word_set in process[::-1]:
+        for word in word_set.keys():
+            if last in [x.id for x in word_set[word].connected_to.keys()]:
+                last = word
+                final.append(last)
+                break
+
+    return len(final), final[::-1]
 
 
-def __main__(word_graph, t='deep'):
+def __main__(word_graph, t='broad'):
     sys.setrecursionlimit(7000)
 
     w1, w2 = input('First word: '), input('Second word: ')
@@ -103,11 +138,14 @@ def __main__(word_graph, t='deep'):
     if t == 'deep':
         return deep_search(word_graph, w1, w2)
     elif t == 'broad':
-        return broad_search(word_graph, w1, w2)
+        result = broad_search(word_graph, w1, w2)
+        return result if result else "No ways! 1"
 
 
 if __name__ == '__main__':
+
     print('Loading...')
     word_graph = Generate_graph.read_data()
+
     while True:
-        print(__main__(word_graph, t='deep'))
+        print(__main__(word_graph))
