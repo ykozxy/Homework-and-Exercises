@@ -51,11 +51,32 @@ class Graph:
 
 
 def is_vicinity(word1, word2):
-    count = 1
-    for i in range(4):
-        if word1[i] != word2[i]:
-            count -= 1
-    return count >= 0
+    if len(word1) == len(word2):
+        count = 1
+        for i in range(len(word1)):
+            if word1[i] != word2[i]:
+                count -= 1
+        return count >= 0
+
+    elif abs(len(word1) - len(word2)) == 1:
+        w1, w2 = [x for x in word1], [y for y in word2]
+        if len(word1) < len(word2):
+            w1, w2 = w2, w1  # word1 > word2
+        # duck  duk
+        count = 1
+        i, j = 0, 0
+        while True:
+            if w1[i] != w2[j]:
+                i += 1
+                count -= 1
+            else:
+                i += 1
+                j += 1
+            if i == len(w1) or j == len(w2):
+                break
+        return count >= 0
+    else:
+        return False
 
 
 def add_word(word_graph: Graph, word: str):
@@ -101,12 +122,12 @@ def read_data() -> Graph:
     return word_graph
 
 
-def __main__(save=True):
-    sys.setrecursionlimit(15000)
+def __main__(save=True, file='words.txt'):
+    sys.setrecursionlimit(20000)
 
     total_words = []
     print('Generating word list...')
-    with open('4-letter.txt', 'r') as words:
+    with open(file, 'r') as words:
         while True:
             temp = words.readline()
             if not temp:
@@ -140,5 +161,4 @@ def __main__(save=True):
 
 
 if __name__ == '__main__':
-    data = read_data()
-    pass
+    __main__()
